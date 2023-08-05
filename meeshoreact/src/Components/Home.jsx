@@ -117,9 +117,7 @@ const Home = () => {
             <div id="main-left-container">
               <div id="select-option">
                 <select>
-                  <option>
-                    Sort by : <strong>Relevance</strong>
-                  </option>
+                  <option>Sort by : Relevance</option>
                   <option>New Arrival</option>
                   <option>Price (High to Low)</option>
                   <option>Price ( Low to High)</option>

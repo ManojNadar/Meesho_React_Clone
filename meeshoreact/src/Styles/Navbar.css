@@ -6,7 +6,7 @@ header {
   position: fixed;
   top: 0;
   background-color: white;
-  z-index: 9999;
+  z-index: 999;
 }
 
 a {
@@ -104,11 +104,12 @@ a {
   height: 100%;
   /* border: 1px solid red; */
   display: flex;
-  justify-content: space-between;
-  /* align-items: center; */
-  /* border-bottom: 1px solid red; */
   text-align: center;
   padding-top: 2.5%;
+}
+
+#cart {
+  margin-left: 10%;
 }
 
 /* profile-dropDown */
@@ -129,7 +130,6 @@ a {
   color: #9f2089;
   font-weight: bolder;
   /* border: 1px solid red; */
-  font-size: 1em;
 }
 
 #user {
@@ -164,6 +164,7 @@ a {
   font-weight: bolder;
   text-align: center;
   margin-top: 3%;
+  font-size: 1.2em;
 }
 
 #orders {
@@ -177,6 +178,42 @@ a {
 
 #orders > h4 {
   padding-left: 10%;
+}
+
+#user-login-details {
+  display: flex;
+  padding-top: 3%;
+  /* border: 1px solid orange; */
+  width: 100%;
+}
+
+.userIcon {
+  font-size: 3em;
+  /* border: 2px solid blue; */
+}
+
+.username {
+  /* border: 1px solid red; */
+  width: 80%;
+  padding-left: 3%;
+}
+.username > p {
+  font-size: 0.8em;
+  padding-top: 3%;
+}
+
+.logoutBtn {
+  width: 95%;
+  padding-left: 2%;
+}
+.logoutBtn > button {
+  width: 100%;
+  height: 35px;
+  background-color: #9f2089;
+  border: none;
+  color: white;
+  font-weight: bolder;
+  border-radius: 10px;
 }
 
 #logs {
@@ -226,4 +263,82 @@ nav {
 #sec-nav-container > p {
   font-size: 1.05em;
   letter-spacing: 0.5px;
+}
+
+/* add Prod modal */
+
+.addProdParentContainer {
+  width: 100%;
+  height: 100vh;
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+.addProdModal {
+  width: 50%;
+  height: 70%;
+  background-image: linear-gradient(rgb(55, 78, 14), rgb(47, 138, 218));
+  position: fixed;
+  left: 25%;
+  top: 20%;
+  z-index: 9999;
+  border-radius: 15px;
+}
+.addProdModal > p {
+  position: absolute;
+  color: white;
+  right: 5%;
+  top: 3%;
+  font-weight: bolder;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.addProdheading {
+  text-align: center;
+  color: white;
+  margin-top: 2%;
+  font-size: 1.3em;
+}
+
+.addProdForm {
+  /* border: 1px solid white; */
+  width: 85%;
+  margin: 2% auto 0 auto;
+}
+.addProdForm > div {
+  width: 100%;
+  margin: 4% 0;
+}
+.addProdForm > div > input {
+  width: 100%;
+  height: 35px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  border-bottom: 3px solid white;
+  color: white;
+}
+.addProdForm > div > input::placeholder {
+  font-size: 1em;
+  color: white;
+}
+.addProdForm > div > select {
+  width: 100%;
+  height: 35px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  border-bottom: 3px solid white;
+  color: white;
+}
+.addProdForm > div > select > option {
+  background-color: #9f2089;
+}
+.addProdForm > div > input[type="submit"] {
+  border: 2px solid white;
+  font-size: 1.2em;
+  font-weight: bolder;
 }

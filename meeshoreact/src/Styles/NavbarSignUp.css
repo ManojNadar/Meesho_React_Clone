@@ -1,0 +1,16 @@
+#right-nav-Container {
+  display: flex;
+  /* border: 1px solid red; */
+  align-items: center;
+  justify-content: space-between;
+  width: 25%;
+}
+
+#mobileNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* border: 1px solid red; */
+  width: 40%;
+  /* border-right: 1px solid grey; */
+}
