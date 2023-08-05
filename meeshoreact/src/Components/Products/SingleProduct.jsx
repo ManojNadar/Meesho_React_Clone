@@ -262,7 +262,12 @@ const SingleProduct = () => {
                 </div>
                 <span>105 Ratings, 32 Reviews </span>
               </div>
-              <p>Delivery Charge Rs.{singleProd.deliveryCharge}</p>
+
+              {parseInt(singleProd.deliveryCharge) === 0 ? (
+                <p>Free Delivery</p>
+              ) : (
+                <p>Delivery Charge Rs.{singleProd.deliveryCharge}</p>
+              )}
             </div>
             <div id="right-middle">
               <h4>SELECT SIZE</h4>

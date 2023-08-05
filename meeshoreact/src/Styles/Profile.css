@@ -4,6 +4,7 @@
   /* margin-top: 8%; */
   height: 100vh;
   padding-top: 10%;
+  background-image: linear-gradient(aliceblue, greenyellow);
 }
 
 .profilesection {
@@ -18,6 +19,8 @@
   width: 20%;
   height: 100%;
   border: 2px solid grey;
+  box-shadow: 2px 5px 10px grey;
+  background-image: linear-gradient(aliceblue, greenyellow);
 }
 .leftProfile > div {
   width: 90%;
@@ -25,29 +28,29 @@
 }
 
 .accountName {
-  border-bottom: 2px solid grey;
+  border-bottom: 10px solid green;
   padding: 3% 0;
   line-height: 25px;
 }
 .accountName > p {
-  font-size: 1em;
+  font-size: 1.2em;
   font-weight: bolder;
   color: #f43397;
 }
 
 .order {
   padding: 10% 0;
-  border-bottom: 2px solid whitesmoke;
+  border-bottom: 5px solid grey;
 }
 
 .coupons {
   padding: 10% 0;
-  border-bottom: 2px solid whitesmoke;
+  border-bottom: 5px solid grey;
 }
 
 .termsPolicy {
   padding: 10% 0;
-  border-bottom: 2px solid whitesmoke;
+  border-bottom: 5px solid grey;
 }
 
 .editProf {
@@ -56,6 +59,7 @@
   margin-top: 15%;
 }
 .editProf > button {
+  cursor: pointer;
   width: 100%;
   height: 100%;
   background-color: #f43397;
@@ -65,12 +69,20 @@
   border: none;
   border-radius: 25px;
 }
+.editProf > button:hover {
+  box-shadow: 3px 2px 15px green;
+}
 
 .rightProfile {
   width: 75%;
   height: 100%;
   border: 2px solid grey;
   padding-left: 5%;
+  background-image: linear-gradient(aliceblue, greenyellow);
+  /* color: white; */
+  font-size: 1.2em;
+
+  box-shadow: 2px 5px 10px grey;
 }
 .profDetailsHeader {
   width: 50%;
@@ -85,6 +97,7 @@
   /* border: 2px solid grey; */
   height: 80%;
   line-height: 45px;
+  font-weight: bolder;
 }
 .profAllDetails > div {
   display: flex;
@@ -93,6 +106,67 @@
   width: 30%;
 }
 .profAllDetails > div:nth-child(1) > p:nth-child(2) {
+  color: #f43397;
+  font-weight: bolder;
+}
+
+/* profModal */
+.profModalParent {
+  width: 100%;
+  height: 100vh;
+  background-color: transparent;
+  border-radius: 5px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+}
+
+.profModal {
+  width: 30%;
+  height: 50%;
+  background-image: linear-gradient(aliceblue, greenyellow);
+  box-shadow: 2px 5px 10px black;
+  border-radius: 5px;
+  position: fixed;
+  left: 25%;
+  top: 22%;
+  z-index: 9999;
+}
+
+.profModal > div {
+  width: 90%;
+  margin: 8% auto 2% auto;
+}
+.profModal > div > input {
+  width: 100%;
+  height: 45px;
+  background-color: transparent;
+  border: none;
+  border: 2px solid grey;
+  padding-left: 2%;
+  font-weight: bolder;
+  font-size: 1.2em;
+}
+.profModal > div > input[type="submit"]:hover {
+  cursor: pointer;
+  font-weight: bolder;
+  background-color: #f43397;
+  color: white;
+}
+
+.closeProfModal {
+  font-weight: bolder;
+  position: absolute;
+  right: 5%;
+  top: 3%;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+.closeProfModal:hover {
+  color: red;
+}
+.role {
   color: #f43397;
   font-weight: bolder;
 }

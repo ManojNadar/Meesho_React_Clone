@@ -176,9 +176,9 @@ const Navbar = () => {
           onMouseLeave={hideProfileDd}
           id="profile-dropDown"
         >
-          <div id="user" onClick={() => route("/profile")}>
+          <div id="user">
             {state?.currentuser ? (
-              <div id="user-login-details">
+              <div id="user-login-details" onClick={() => route("/profile")}>
                 <div className="userIcon">
                   <BiUserCircle />
                 </div>
