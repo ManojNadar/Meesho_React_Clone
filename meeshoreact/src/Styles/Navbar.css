@@ -140,6 +140,7 @@ a {
   border-bottom: 1px solid rgb(209, 205, 205);
   background-color: white;
   padding-left: 2%;
+  cursor: pointer;
 }
 
 #user-details {
@@ -263,6 +264,9 @@ nav {
 #sec-nav-container > p {
   font-size: 1.05em;
   letter-spacing: 0.5px;
+}
+#sec-nav-container > p > a:hover {
+  color: red;
 }
 
 /* add Prod modal */

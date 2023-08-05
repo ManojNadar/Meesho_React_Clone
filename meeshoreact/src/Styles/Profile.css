@@ -1,0 +1,98 @@
+.profileContainer {
+  width: 100%;
+  /* border: 2px solid red; */
+  /* margin-top: 8%; */
+  height: 100vh;
+  padding-top: 10%;
+}
+
+.profilesection {
+  width: 95%;
+  margin: 0 auto;
+  /* border: 5px solid grey; */
+  height: 95%;
+  display: flex;
+  justify-content: space-around;
+}
+.leftProfile {
+  width: 20%;
+  height: 100%;
+  border: 2px solid grey;
+}
+.leftProfile > div {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.accountName {
+  border-bottom: 2px solid grey;
+  padding: 3% 0;
+  line-height: 25px;
+}
+.accountName > p {
+  font-size: 1em;
+  font-weight: bolder;
+  color: #f43397;
+}
+
+.order {
+  padding: 10% 0;
+  border-bottom: 2px solid whitesmoke;
+}
+
+.coupons {
+  padding: 10% 0;
+  border-bottom: 2px solid whitesmoke;
+}
+
+.termsPolicy {
+  padding: 10% 0;
+  border-bottom: 2px solid whitesmoke;
+}
+
+.editProf {
+  width: 100%;
+  height: 45px;
+  margin-top: 15%;
+}
+.editProf > button {
+  width: 100%;
+  height: 100%;
+  background-color: #f43397;
+  color: white;
+  font-weight: bolder;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 25px;
+}
+
+.rightProfile {
+  width: 75%;
+  height: 100%;
+  border: 2px solid grey;
+  padding-left: 5%;
+}
+.profDetailsHeader {
+  width: 50%;
+  height: 20%;
+  padding-top: 4%;
+  text-decoration: underline;
+  /* border-bottom: 2px solid grey; */
+}
+
+.profAllDetails {
+  width: 55%;
+  /* border: 2px solid grey; */
+  height: 80%;
+  line-height: 45px;
+}
+.profAllDetails > div {
+  display: flex;
+}
+.profAllDetails > div > p {
+  width: 30%;
+}
+.profAllDetails > div:nth-child(1) > p:nth-child(2) {
+  color: #f43397;
+  font-weight: bolder;
+}

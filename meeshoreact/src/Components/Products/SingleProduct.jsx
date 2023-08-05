@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../Styles/ProductsCss/SingleProduct.css";
 import Navbar from "../Navbar";
-import { useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { MeeshoContext } from "../Context/MyContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SingleProduct = () => {
   const [singleProd, setSingleProd] = useState({});
+  const [updateProdModal, setProdModal] = useState(false);
   const { state } = useContext(MeeshoContext);
   const { id } = useParams();
-
-  console.log(singleProd);
+  const route = useNavigate();
+  // console.log(singleProd);
 
   useEffect(() => {
     const getMeeshoProduct = JSON.parse(localStorage.getItem("meeshoproducts"));
@@ -20,9 +23,167 @@ const SingleProduct = () => {
     }
   }, []);
 
+  const showUpdateProdModal = () => {
+    setProdModal(true);
+  };
+  const hideUpdateProdModal = () => {
+    setProdModal(false);
+  };
+
+  const handleUpdateProdDetails = (e) => {
+    const { name, value } = e.target;
+    setSingleProd({ ...singleProd, [name]: value });
+  };
+
+  const handleUpdateProdDetailsForm = (e) => {
+    e.preventDefault();
+
+    const getMeeshoProduct = JSON.parse(localStorage.getItem("meeshoproducts"));
+    if (getMeeshoProduct) {
+      for (let i = 0; i < getMeeshoProduct.length; i++) {
+        if (getMeeshoProduct[i].id === id) {
+          getMeeshoProduct[i].img = singleProd.img;
+          getMeeshoProduct[i].title = singleProd.title;
+          getMeeshoProduct[i].price = singleProd.price;
+          getMeeshoProduct[i].discount = singleProd.discount;
+          getMeeshoProduct[i].deliveryCharge = singleProd.deliveryCharge;
+          getMeeshoProduct[i].category = singleProd.category;
+
+          localStorage.setItem(
+            "meeshoproducts",
+            JSON.stringify(getMeeshoProduct)
+          );
+          setProdModal(false);
+          toast.success("product Updated");
+        }
+      }
+    }
+  };
+
+  const addToCart = (id) => {
+    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
+    const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
+
+    if (currentuser) {
+      for (let i = 0; i < regUser.length; i++) {
+        if (regUser[i].meeshoEmail === currentuser.meeshoEmail) {
+          const filterProd = regUser[i].cart.find((e) => e.id === id);
+          if (regUser[i].cart.length && filterProd) {
+            toast.info("already added");
+            setTimeout(() => {
+              route("/cart");
+            }, 900);
+          } else {
+            regUser[i].cart.push(singleProd);
+            localStorage.setItem("meeshoreguser", JSON.stringify(regUser));
+            toast.success("product added");
+            setTimeout(() => {
+              route("/allproducts");
+            }, 900);
+          }
+        }
+      }
+    }
+  };
+
   return (
     <>
       <Navbar />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+      {updateProdModal ? (
+        <div className="updateProfModal">
+          <div className="modalProdUpdateContainer">
+            <p onClick={hideUpdateProdModal} className="closeProdModal">
+              X
+            </p>
+            <h2>Update Profile</h2>
+            <form
+              className="updateProdForm"
+              onSubmit={handleUpdateProdDetailsForm}
+            >
+              <div>
+                <input
+                  type="text"
+                  placeholder="Update Image URL"
+                  onChange={handleUpdateProdDetails}
+                  value={singleProd.img}
+                  name="img"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Update Product Title"
+                  onChange={handleUpdateProdDetails}
+                  value={singleProd.title}
+                  name="title"
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  placeholder="Update Product Price"
+                  onChange={handleUpdateProdDetails}
+                  value={singleProd.price}
+                  name="price"
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  placeholder="Update Product discount"
+                  onChange={handleUpdateProdDetails}
+                  value={singleProd.discount}
+                  name="discount"
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  placeholder="Update Product Delivery Charge"
+                  onChange={handleUpdateProdDetails}
+                  value={singleProd.deliveryCharge}
+                  name="deliveryCharge"
+                />
+              </div>
+              <div>
+                <select
+                  name="category"
+                  value={singleProd.category}
+                  onChange={handleUpdateProdDetails}
+                >
+                  <option value="">SELECT CATEGORY</option>
+                  <option value="Mens">Mens</option>
+                  <option value="Womens">Womens</option>
+                  <option value="Kids">Kids</option>
+                  <option value="Home">Home & Accessories</option>
+                  <option value="Jwellery">Jwellery</option>
+                  <option value="Footwear">Footwear</option>
+                  <option value="Electronics">Electronics</option>
+                </select>
+              </div>
+
+              <div>
+                <input type="submit" value="UPDATE PRODUCT" />
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
       <main>
         <div id="main-inner-body">
           <div id="left-section">
@@ -58,10 +219,13 @@ const SingleProduct = () => {
                 </div>
               </div>
 
-              {state?.currentuser && state?.currentuser?.meeshoRole === "Buyer" ? (
+              {state?.currentuser &&
+              state?.currentuser?.meeshoRole === "Buyer" ? (
                 <div id="main-btn">
                   <div id="cart-btn">
-                    <button>Add to Cart</button>
+                    <button onClick={() => addToCart(singleProd.id)}>
+                      Add to Cart
+                    </button>
                   </div>
                   <div id="buy-btn">
                     <button>Buy Now</button>
@@ -71,7 +235,9 @@ const SingleProduct = () => {
               {state?.currentuser?.meeshoRole === "Seller" ? (
                 <div id="main-btn">
                   <div id="buy-btn">
-                    <button>UPDATE PRODUCT</button>
+                    <button onClick={showUpdateProdModal}>
+                      UPDATE PRODUCT
+                    </button>
                   </div>
                 </div>
               ) : null}
@@ -133,7 +299,7 @@ const SingleProduct = () => {
                 <p>11-12 Years (Bust Size : 34 in, Length Size: 40 in)</p>
                 <p>PARI DRESS</p>
                 <p>Country of Origin : India</p>
-                <a href="">More Information</a>
+                <NavLink to="">More Information</NavLink>
               </div>
             </div>
             <div id="right-fourth">
