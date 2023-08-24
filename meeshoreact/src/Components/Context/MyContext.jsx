@@ -54,7 +54,6 @@ const MyContext = ({ children }) => {
           payload: response.data.user,
         });
       } else {
-        localStorage.removeItem("token");
         dispatch({
           type: "LOGOUT",
         });
