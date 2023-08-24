@@ -1,16 +1,18 @@
+import axios from "axios";
 import React, { createContext, useEffect, useReducer } from "react";
 
 const initialState = { currentuser: null };
-export const MeeshoContext = createContext();
 
 const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       return {
+        ...state,
         currentuser: action.payload,
       };
     case "LOGOUT":
       return {
+        ...state,
         currentuser: null,
       };
     default:
@@ -18,32 +20,48 @@ const reducer = (state, action) => {
   }
 };
 
+export const MeeshoContext = createContext();
+
 const MyContext = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   // console.log(state);
-  const login = (userData) => {
-    localStorage.setItem("currentmeeshouser", JSON.stringify(userData));
+
+  const login = (userData, token) => {
+    localStorage.setItem("userToken", JSON.stringify(token));
     dispatch({
       type: "LOGIN",
       payload: userData,
     });
   };
   const logout = () => {
-    localStorage.removeItem("currentmeeshouser");
+    localStorage.removeItem("userToken");
     dispatch({
       type: "LOGOUT",
     });
   };
 
   useEffect(() => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
+    async function getCurremtUser() {
+      const token = JSON.parse(localStorage.getItem("userToken"));
 
-    if (currentuser) {
-      dispatch({
-        type: "LOGIN",
-        payload: currentuser,
+      const response = await axios.post("http://localhost:8000/currentuser", {
+        token,
       });
+
+      if (response.data.success) {
+        dispatch({
+          type: "LOGIN",
+          payload: response.data.user,
+        });
+      } else {
+        localStorage.removeItem("token");
+        dispatch({
+          type: "LOGOUT",
+        });
+      }
     }
+
+    getCurremtUser();
   }, []);
 
   return (
@@ -56,3 +74,28 @@ const MyContext = ({ children }) => {
 };
 
 export default MyContext;
+
+// const login = (userData) => {
+//   localStorage.setItem("currentmeeshouser", JSON.stringify(userData));
+//   dispatch({
+//     type: "LOGIN",
+//     payload: userData,
+//   });
+// };
+// const logout = () => {
+//   localStorage.removeItem("currentmeeshouser");
+//   dispatch({
+//     type: "LOGOUT",
+//   });
+// };
+
+// useEffect(() => {
+//   const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
+
+//   if (currentuser) {
+//     dispatch({
+//       type: "LOGIN",
+//       payload: currentuser,
+//     });
+//   }
+// }, []);

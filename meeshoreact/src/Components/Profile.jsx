@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../Styles/Profile.css";
 import Navbar from "./Navbar";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { MeeshoContext } from "./Context/MyContext";
 import { toast } from "react-toastify";
 
 const Profile = () => {
   const [profModal, setProfModal] = useState(false);
   const [profDetails, setProfDetails] = useState({});
-  const route = useNavigate();
+  // const route = useNavigate();
 
   const { state, login } = useContext(MeeshoContext);
 
@@ -43,7 +43,7 @@ const Profile = () => {
 
     const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
     const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
-    const { meeshoUser, meeshoPassword, meeshoCpassword } = profDetails;
+    const { meeshoPassword, meeshoCpassword } = profDetails;
     if (currentuser) {
       if (meeshoPassword === meeshoCpassword) {
         for (let i = 0; i < regUser.length; i++) {

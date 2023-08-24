@@ -7,8 +7,13 @@ import AllProducts from "./Components/Products/AllProducts";
 import SingleProduct from "./Components/Products/SingleProduct";
 import Cart from "./Components/Cart";
 import Profile from "./Components/Profile";
+import { useContext } from "react";
+import { MeeshoContext } from "./Components/Context/MyContext";
 
 function App() {
+  const { state } = useContext(MeeshoContext);
+
+  console.log(state?.currentuser);
   return (
     <div className="App">
       <Routes>
