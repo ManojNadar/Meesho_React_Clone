@@ -27,14 +27,14 @@ const MyContext = ({ children }) => {
   // console.log(state);
 
   const login = (userData, token) => {
-    localStorage.setItem("userToken", JSON.stringify(token));
+    localStorage.setItem("meeshoToken", JSON.stringify(token));
     dispatch({
       type: "LOGIN",
       payload: userData,
     });
   };
   const logout = () => {
-    localStorage.removeItem("userToken");
+    localStorage.removeItem("meeshoToken");
     dispatch({
       type: "LOGOUT",
     });
@@ -42,7 +42,7 @@ const MyContext = ({ children }) => {
 
   useEffect(() => {
     async function getCurremtUser() {
-      const token = JSON.parse(localStorage.getItem("userToken"));
+      const token = JSON.parse(localStorage.getItem("meeshoToken"));
 
       const response = await axios.post("http://localhost:8000/currentuser", {
         token,
