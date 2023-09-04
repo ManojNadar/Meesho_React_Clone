@@ -28,27 +28,31 @@ const Login = () => {
     const { meeshoEmail, meeshoPassword } = loginMeesho;
 
     if (meeshoEmail && meeshoPassword) {
-      const response = await axios.post("http://localhost:8000/login", {
-        loginMeesho,
-      });
-
-      if (response.data.success) {
-        const user = response.data.user;
-        const token = response.data.token;
-
-        await login(user, token);
-
-        toast.success(response.data.message);
-        setloginMeesho({
-          meeshoEmail: "",
-          meeshoPassword: "",
+      try {
+        const response = await axios.post("http://localhost:8000/login", {
+          loginMeesho,
         });
 
-        setTimeout(() => {
-          route("/");
-        }, 1000);
-      } else {
-        toast.error(response.data.message);
+        if (response.data.success) {
+          const user = response.data.user;
+          const token = response.data.token;
+
+          await login(user, token);
+
+          toast.success(response.data.message);
+          setloginMeesho({
+            meeshoEmail: "",
+            meeshoPassword: "",
+          });
+
+          setTimeout(() => {
+            route("/");
+          }, 1000);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
       }
     } else {
       toast.error("all fields are mandatory");

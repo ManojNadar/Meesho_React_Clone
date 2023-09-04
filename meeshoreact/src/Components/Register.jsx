@@ -45,6 +45,10 @@ const Register = () => {
       meeshoRole
     ) {
       if (meeshoPassword === meeshoCpassword) {
+
+        try {
+          
+       
         const response = await axios.post("http://localhost:8000/register", {
           regMeeshoUser,
         });
@@ -65,6 +69,9 @@ const Register = () => {
         } else {
           toast.error(response.data.message);
         }
+      } catch (error) {
+          toast.error(error.response.data.message)
+      }
       } else {
         toast.error("pasword doesnot match");
       }

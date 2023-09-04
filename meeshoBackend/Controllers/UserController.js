@@ -33,7 +33,7 @@ export const Register = async (req, res) => {
 
     const user = await User.find({ meeshoEmail });
 
-    if (user.length)
+    if (user?.length)
       return res.status(404).json({
         success: false,
         message: "user already exist please try login",
