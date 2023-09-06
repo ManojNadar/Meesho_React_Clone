@@ -55,13 +55,9 @@ const MyContext = ({ children }) => {
             type: "LOGIN",
             payload: response.data.user,
           });
-        } else {
-          dispatch({
-            type: "LOGOUT",
-          });
         }
       } catch (error) {
-        toast.error(error.response.data.message);
+        console.log(error.response.data.message);
       }
     }
 

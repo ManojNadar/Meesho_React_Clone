@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 export const Register = async (req, res) => {
   try {
-    const { name, email, password, number, role } = req.body.myntraReg;
+    const { name, email, password, number, role } = req.body.meeshoReg;
     // const { name, email, password, number, role } = req.body;
 
     console.log(name, email, password, number, role);
@@ -51,7 +51,7 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
   try {
-    const { email, password } = req.body.loginInput;
+    const { email, password } = req.body.loginMeesho;
 
     if (email && password) {
       const user = await User.findOne({ email });

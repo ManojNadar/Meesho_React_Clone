@@ -183,7 +183,7 @@ const Navbar = () => {
                   <BiUserCircle />
                 </div>
                 <div className="username">
-                  <h3 id="current_user">{state?.currentuser?.meeshoUser}</h3>
+                  <h3 id="current_user">{state?.currentuser?.name}</h3>
                   <p>+91 1234567890</p>
                 </div>
               </div>
@@ -255,23 +255,22 @@ const Navbar = () => {
 
               {/* cart */}
 
-              {state?.currentuser &&
-                state?.currentuser?.meeshoRole === "Buyer" && (
-                  <div id="cart">
-                    <NavLink to="/cart">
-                      <i
-                        className="fa-solid fa-cart-shopping fa-sm"
-                        style={{ color: "#828283" }}
-                      ></i>
-                      <p>Cart</p>
-                    </NavLink>
-                  </div>
-                )}
+              {state?.currentuser && state?.currentuser?.role === "Buyer" && (
+                <div id="cart">
+                  <NavLink to="/cart">
+                    <i
+                      className="fa-solid fa-cart-shopping fa-sm"
+                      style={{ color: "#828283" }}
+                    ></i>
+                    <p>Cart</p>
+                  </NavLink>
+                </div>
+              )}
 
               {/* Add product  */}
 
               {state?.currentuser &&
-                state?.currentuser?.meeshoRole === "Seller" && (
+                state?.currentuser?.role === "Seller" && (
                   <div id="cart" onClick={showProdModal}>
                     <NavLink>
                       <i

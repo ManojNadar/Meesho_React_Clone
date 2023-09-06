@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../Styles/Profile.css";
 import Navbar from "./Navbar";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MeeshoContext } from "./Context/MyContext";
 import { toast } from "react-toastify";
 
 const Profile = () => {
   const [profModal, setProfModal] = useState(false);
   const [profDetails, setProfDetails] = useState({});
-  // const route = useNavigate();
+  const route = useNavigate();
 
   const { state, login } = useContext(MeeshoContext);
 
@@ -19,11 +19,11 @@ const Profile = () => {
     setProfModal(false);
   };
 
-  // useEffect(() => {
-  //   if (!state?.currentuser) {
-  //     route("/");
-  //   }
-  // }, [state]);
+  useEffect(() => {
+    if (!state?.currentuser) {
+      route("/");
+    }
+  }, [state]);
 
   useEffect(() => {
     const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
@@ -120,7 +120,7 @@ const Profile = () => {
             <div>
               <div className="accountName">
                 <h3>ACCOUNT NAME</h3>
-                <p>{state?.currentuser?.meeshoUser}</p>
+                <p>{state?.currentuser?.name}</p>
               </div>
 
               <div className="order">
@@ -150,7 +150,7 @@ const Profile = () => {
             <div className="profAllDetails">
               <div>
                 <p>Name</p>
-                <p>{state?.currentuser?.meeshoUser}</p>
+                <p>{state?.currentuser?.name}</p>
               </div>
               <div>
                 <p>Email</p>
@@ -158,7 +158,7 @@ const Profile = () => {
               </div>
               <div>
                 <p>Role</p>
-                <p className="role">{state?.currentuser?.meeshoRole}</p>
+                <p className="role">{state?.currentuser?.role}</p>
               </div>
               <div>
                 <p>Mobile Number</p>

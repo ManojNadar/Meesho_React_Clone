@@ -8,14 +8,17 @@ import axios from "axios";
 import { MeeshoContext } from "./Context/MyContext";
 
 const Register = () => {
-  const [regMeeshoUser, setRegMeeshoUser] = useState({
-    meeshoUser: "",
-    meeshoEmail: "",
-    meeshoPassword: "",
-    meeshoCpassword: "",
-    meeshoRole: "Buyer",
+  const [meeshoReg, setMeeshoReg] = useState({
+    name: "",
+    email: "",
+    number: "",
+    password: "",
+    confirmPassword: "",
+    role: "Buyer",
     cart: [],
   });
+
+  console.log(meeshoReg);
 
   const { state } = useContext(MeeshoContext);
 
@@ -23,55 +26,41 @@ const Register = () => {
 
   const handleChangeInput = (e) => {
     const { value, name } = e.target;
-    setRegMeeshoUser({ ...regMeeshoUser, [name]: value });
+    setMeeshoReg({ ...meeshoReg, [name]: value });
   };
 
   const handleRegFormSubmit = async (e) => {
     e.preventDefault();
 
-    const {
-      meeshoUser,
-      meeshoEmail,
-      meeshoPassword,
-      meeshoCpassword,
-      meeshoRole,
-    } = regMeeshoUser;
+    const { name, email, password, confirmPassword, number, role } = meeshoReg;
 
-    if (
-      meeshoUser &&
-      meeshoEmail &&
-      meeshoPassword &&
-      meeshoCpassword &&
-      meeshoRole
-    ) {
-      if (meeshoPassword === meeshoCpassword) {
-
+    if (name && email && password && confirmPassword && number && role) {
+      if (password === confirmPassword) {
         try {
-          
-       
-        const response = await axios.post("http://localhost:8000/register", {
-          regMeeshoUser,
-        });
-
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setRegMeeshoUser({
-            meeshoUser: "",
-            meeshoEmail: "",
-            meeshoPassword: "",
-            meeshoCpassword: "",
-            meeshoRole: "Buyer",
+          const response = await axios.post("http://localhost:8000/register", {
+            meeshoReg,
           });
 
-          setTimeout(() => {
-            route("/login");
-          }, 800);
-        } else {
-          toast.error(response.data.message);
+          if (response.data.success) {
+            toast.success(response.data.message);
+            setMeeshoReg({
+              name: "",
+              email: "",
+              number: "",
+              password: "",
+              confirmPassword: "",
+              role: "Buyer",
+            });
+
+            setTimeout(() => {
+              route("/login");
+            }, 800);
+          } else {
+            toast.error(response.data.message);
+          }
+        } catch (error) {
+          toast.error(error.response.data.message);
         }
-      } catch (error) {
-          toast.error(error.response.data.message)
-      }
       } else {
         toast.error("pasword doesnot match");
       }
@@ -120,8 +109,8 @@ const Register = () => {
                     id="userName"
                     type="text"
                     placeholder="Enter your name"
-                    name="meeshoUser"
-                    value={regMeeshoUser.meeshoUser}
+                    name="name"
+                    value={meeshoReg.name}
                   />
                   <br />
                   <input
@@ -129,17 +118,27 @@ const Register = () => {
                     id="userEmail"
                     type="email"
                     placeholder="Enter your email"
-                    name="meeshoEmail"
-                    value={regMeeshoUser.meeshoEmail}
+                    name="email"
+                    value={meeshoReg.email}
                   />
                   <br />
+                  <input
+                    onChange={handleChangeInput}
+                    id="number"
+                    type="number"
+                    placeholder="Enter your Phone"
+                    name="number"
+                    value={meeshoReg.number}
+                  />
+                  <br />
+
                   <input
                     onChange={handleChangeInput}
                     id="userPassword"
                     type="password"
                     placeholder="**********"
-                    name="meeshoPassword"
-                    value={regMeeshoUser.meeshoPassword}
+                    name="password"
+                    value={meeshoReg.password}
                   />
                   <br />
                   <input
@@ -147,15 +146,15 @@ const Register = () => {
                     id="userConfirmPassword"
                     type="password"
                     placeholder="**********"
-                    name="meeshoCpassword"
-                    value={regMeeshoUser.meeshoCpassword}
+                    name="confirmPassword"
+                    value={meeshoReg.confirmPassword}
                   />
                   <br />
                   <select
                     onChange={handleChangeInput}
                     id="userRole"
-                    name="meeshoRole"
-                    value={regMeeshoUser.meeshoRole}
+                    name="role"
+                    value={meeshoReg.role}
                   >
                     <option value="">Select your Role</option>
                     <option value="Buyer">BUYER</option>
@@ -183,102 +182,3 @@ const Register = () => {
 };
 
 export default Register;
-
-// const [regMeeshoUser, setRegMeeshoUser] = useState({
-//   meeshoUser: "",
-//   meeshoEmail: "",
-//   meeshoPassword: "",
-//   meeshoCpassword: "",
-//   meeshoRole: "",
-//   cart: [],
-// });
-
-// const route = useNavigate();
-
-// useEffect(() => {
-//   const getcurrUser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-//   if (getcurrUser) {
-//     route("/");
-//   }
-// }, []);
-
-// const handleChangeInput = (e) => {
-//   const { value, name } = e.target;
-//   setRegMeeshoUser({ ...regMeeshoUser, [name]: value });
-// };
-
-// const handleRegFormSubmit = (e) => {
-//   e.preventDefault();
-
-//   const {
-//     meeshoUser,
-//     meeshoEmail,
-//     meeshoPassword,
-//     meeshoCpassword,
-//     meeshoRole,
-//   } = regMeeshoUser;
-
-//   if (
-//     meeshoUser &&
-//     meeshoEmail &&
-//     meeshoPassword &&
-//     meeshoCpassword &&
-//     meeshoRole
-//   ) {
-//     if (meeshoPassword.length > 2) {
-//       if (meeshoPassword === meeshoCpassword) {
-//         const getMeeshoUser =
-//           JSON.parse(localStorage.getItem("meeshoreguser")) || [];
-//         let flag = false;
-//         for (let i = 0; i < getMeeshoUser.length; i++) {
-//           if (getMeeshoUser[i].meeshoEmail === meeshoEmail) {
-//             flag = true;
-//           }
-//         }
-
-//         if (!flag) {
-//           const meeshoObj = {
-//             ...regMeeshoUser,
-//           };
-//           getMeeshoUser.push(meeshoObj);
-//           localStorage.setItem(
-//             "meeshoreguser",
-//             JSON.stringify(getMeeshoUser)
-//           );
-//           toast.success("Registered Successfully");
-
-//           setTimeout(() => {
-//             route("/login");
-//           }, 700);
-//           setRegMeeshoUser({
-//             meeshoUser: "",
-//             meeshoEmail: "",
-//             meeshoPassword: "",
-//             meeshoCpassword: "",
-//             meeshoRole: "",
-//           });
-//         }
-//       } else {
-//         toast.error("password doesnot match");
-//         setRegMeeshoUser({
-//           meeshoUser: "",
-//           meeshoEmail: "",
-//           meeshoPassword: "",
-//           meeshoCpassword: "",
-//           meeshoRole: "",
-//         });
-//       }
-//     } else {
-//       toast.warn("Password must contain atleast 3 characters");
-//       setRegMeeshoUser({
-//         meeshoUser: "",
-//         meeshoEmail: "",
-//         meeshoPassword: "",
-//         meeshoCpassword: "",
-//         meeshoRole: "",
-//       });
-//     }
-//   } else {
-//     toast.error("Please fill all the Fields");
-//   }
-// };
