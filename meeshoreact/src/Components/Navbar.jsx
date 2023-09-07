@@ -5,16 +5,15 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { MeeshoContext } from "./Context/MyContext";
 import { BiUserCircle } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
-import { v4 as uuid } from "uuid";
+import axios from "axios";
+
 const Navbar = () => {
   const [profileDd, setProfileDd] = useState(false);
   const [addProdModal, setAddProdModal] = useState(false);
   const [addProduct, setAddProduct] = useState({
-    img: "",
     title: "",
     price: "",
-    deliveryCharge: "",
-    discount: "",
+    image: "",
     category: "",
   });
 
@@ -23,33 +22,34 @@ const Navbar = () => {
     setAddProduct({ ...addProduct, [name]: value });
   };
 
-  const handleAddProdForm = (e) => {
+  const handleAddProdForm = async (e) => {
     e.preventDefault();
 
-    const { img, title, price, deliveryCharge, discount, category } =
-      addProduct;
+    const { image, title, price, category } = addProduct;
 
-    if (img && title && price && deliveryCharge && discount && category) {
-      const getMeeshoProd =
-        JSON.parse(localStorage.getItem("meeshoproducts")) || [];
+    if (image && title && price && category) {
+      try {
+        const token = JSON.parse(localStorage.getItem("meeshoToken"));
+        const response = await axios.post("http://localhost:8000/addproduct", {
+          addProduct,
+          token,
+        });
 
-      const meeshObj = {
-        ...addProduct,
-        id: uuid(),
-      };
-
-      getMeeshoProd.push(meeshObj);
-      localStorage.setItem("meeshoproducts", JSON.stringify(getMeeshoProd));
-      toast.success("product added successfully");
-      setAddProdModal(false);
-      setAddProduct({
-        img: "",
-        title: "",
-        price: "",
-        deliveryCharge: "",
-        discount: "",
-        category: "",
-      });
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setAddProduct({
+            title: "",
+            price: "",
+            image: "",
+            category: "",
+          });
+          setAddProdModal(false);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
 
       setTimeout(() => {
         route("/allproducts");
@@ -105,8 +105,8 @@ const Navbar = () => {
                   onChange={handleProdDetails}
                   type="text"
                   placeholder="Product Image Url"
-                  name="img"
-                  value={addProduct.img}
+                  name="image"
+                  value={addProduct.image}
                 />
               </div>
               <div>
@@ -127,24 +127,7 @@ const Navbar = () => {
                   value={addProduct.price}
                 />
               </div>
-              <div>
-                <input
-                  onChange={handleProdDetails}
-                  type="number"
-                  placeholder="Delivery Charge"
-                  name="deliveryCharge"
-                  value={addProduct.deliveryCharge}
-                />
-              </div>
-              <div>
-                <input
-                  type="number"
-                  placeholder="Product Discount"
-                  name="discount"
-                  value={addProduct.discount}
-                  onChange={handleProdDetails}
-                />
-              </div>
+
               <div>
                 <select
                   value={addProduct.category}
@@ -269,18 +252,24 @@ const Navbar = () => {
 
               {/* Add product  */}
 
-              {state?.currentuser &&
-                state?.currentuser?.role === "Seller" && (
-                  <div id="cart" onClick={showProdModal}>
-                    <NavLink>
-                      <i
-                        className="fa-regular fa-square-plus"
-                        style={{ color: "#828283" }}
-                      ></i>
-                      <p>Add Product</p>
-                    </NavLink>
-                  </div>
-                )}
+              {state?.currentuser && state?.currentuser?.role === "Seller" && (
+                <div className="addproduct" onClick={showProdModal}>
+                  <NavLink>
+                    <i
+                      className="fa-regular fa-square-plus"
+                      style={{ color: "#828283" }}
+                    ></i>
+                    <p>Add Product</p>
+                  </NavLink>
+                  <NavLink to="/myproducts">
+                    <i
+                      class="fa-brands fa-product-hunt"
+                      style={{ color: "#828283" }}
+                    ></i>
+                    <p>My Products</p>
+                  </NavLink>
+                </div>
+              )}
 
               {/* No user */}
 

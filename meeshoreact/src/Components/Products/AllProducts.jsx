@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import "../../Styles/ProductsCss/AllProducts.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
@@ -9,46 +10,69 @@ const AllProducts = () => {
   //   console.log(products);
 
   useEffect(() => {
-    const getMeeshoProd = JSON.parse(localStorage.getItem("meeshoproducts"));
+    async function getAllProducts() {
+      try {
+        const response = await axios.get("http://localhost:8000/getproducts");
 
-    if (getMeeshoProd) {
-      setProducts(getMeeshoProd);
+        if (response.data.success) {
+          setProducts(response.data.allProducts);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
+
+    getAllProducts();
   }, []);
 
-  const handleFilterProduct = (e) => {
+  const handleFilterProduct = async (e) => {
     const { value } = e.target;
 
-    const getMeeshoProd = JSON.parse(localStorage.getItem("meeshoproducts"));
+    try {
+      const response = await axios.get("http://localhost:8000/getproducts");
 
-    if (value === "Mens") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Mens");
-      setProducts(filterProd);
-    } else if (value === "Womens") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Womens");
-      setProducts(filterProd);
-    } else if (value === "Womens") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Womens");
-      setProducts(filterProd);
-    } else if (value === "Kids") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Kids");
-      setProducts(filterProd);
-    } else if (value === "Jwellery") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Jwellery");
-      setProducts(filterProd);
-    } else if (value === "Home") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Home");
-      setProducts(filterProd);
-    } else if (value === "Footwear") {
-      const filterProd = getMeeshoProd.filter((e) => e.category === "Footwear");
-      setProducts(filterProd);
-    } else if (value === "Electronics") {
-      const filterProd = getMeeshoProd.filter(
-        (e) => e.category === "Electronics"
-      );
-      setProducts(filterProd);
-    } else {
-      setProducts(getMeeshoProd);
+      if (response.data.success) {
+        const getMeeshoProd = response.data.allProducts;
+        if (value === "Mens") {
+          const filterProd = getMeeshoProd.filter((e) => e.category === "Mens");
+          setProducts(filterProd);
+        } else if (value === "Womens") {
+          const filterProd = getMeeshoProd.filter(
+            (e) => e.category === "Womens"
+          );
+          setProducts(filterProd);
+        } else if (value === "Womens") {
+          const filterProd = getMeeshoProd.filter(
+            (e) => e.category === "Womens"
+          );
+          setProducts(filterProd);
+        } else if (value === "Kids") {
+          const filterProd = getMeeshoProd.filter((e) => e.category === "Kids");
+          setProducts(filterProd);
+        } else if (value === "Jwellery") {
+          const filterProd = getMeeshoProd.filter(
+            (e) => e.category === "Jwellery"
+          );
+          setProducts(filterProd);
+        } else if (value === "Home") {
+          const filterProd = getMeeshoProd.filter((e) => e.category === "Home");
+          setProducts(filterProd);
+        } else if (value === "Footwear") {
+          const filterProd = getMeeshoProd.filter(
+            (e) => e.category === "Footwear"
+          );
+          setProducts(filterProd);
+        } else if (value === "Electronics") {
+          const filterProd = getMeeshoProd.filter(
+            (e) => e.category === "Electronics"
+          );
+          setProducts(filterProd);
+        } else {
+          setProducts(getMeeshoProd);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -171,9 +195,9 @@ const AllProducts = () => {
                   <div
                     className="main_img_container"
                     key={item.id}
-                    onClick={() => route(`/singleproduct/${item.id}`)}
+                    onClick={() => route(`/singleproduct/${item._id}`)}
                   >
-                    <img src={item.img} alt="" />
+                    <img src={item.image} alt="" />
                     <div className="ProdDetails">
                       <p>{item.title.slice(0, 20)}..</p>
                       <h4>Rs.{item.price}</h4>
@@ -181,11 +205,11 @@ const AllProducts = () => {
                       {parseInt(item.deliveryCharge) === 0 ? (
                         <p>Free Delivery</p>
                       ) : (
-                        <p>Delvery Charges Rs.{item.deliveryCharge}</p>
+                        <p>Delvery Charges Rs. -{item.deliveryCharge}</p>
                       )}
                       <h5>
-                        Discount Rs.
-                        <span className="strikeText">{item.discount}</span>
+                        Discount Rs. -
+                        <span className="strikeText">{item.discount} </span>
                       </h5>
                     </div>
                   </div>

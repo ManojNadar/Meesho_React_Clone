@@ -15,7 +15,7 @@ a {
 }
 
 #nav-container {
-  width: 90%;
+  width: 98%;
   /* border: 1px solid red; */
   height: 100%;
   margin: auto;
@@ -24,7 +24,7 @@ a {
 }
 
 #left-nav {
-  width: 47%;
+  width: 45%;
   display: flex;
   /* border: 1px solid blue; */
   /* align-items: center; */
@@ -71,7 +71,7 @@ a {
 }
 
 #right-nav {
-  width: 45%;
+  width: 50%;
   /* border: 1px solid blue; */
   display: flex;
   align-items: center;
@@ -82,7 +82,7 @@ a {
 }
 
 #mobile {
-  width: 32%;
+  width: 30%;
   /* border: 1px solid red; */
   height: 100%;
   border-right: 0.5px solid rgb(235, 234, 234);
@@ -92,7 +92,7 @@ a {
   padding: 1% 0 0 2%;
 }
 #supplier {
-  width: 28%;
+  width: 25%;
   /* border: 1px solid red; */
   height: 100%;
   border-right: 0.5px solid rgb(223, 221, 221);
@@ -100,16 +100,28 @@ a {
   padding: 4.5% 0 0 0;
 }
 #profile-container {
-  width: 32%;
+  width: 40%;
   height: 100%;
   /* border: 1px solid red; */
   display: flex;
+  justify-content: space-around;
   text-align: center;
   padding-top: 2.5%;
 }
 
 #cart {
   margin-left: 10%;
+}
+
+.addproduct {
+  width: 100%;
+  margin-left: 5%;
+  display: flex;
+  justify-content: space-around;
+  /* border: 1px solid red; */
+}
+.addproduct p {
+  font-size: 0.9em;
 }
 
 /* profile-dropDown */
@@ -314,7 +326,7 @@ nav {
 }
 .addProdForm > div {
   width: 100%;
-  margin: 4% 0;
+  margin: 7% 0;
 }
 .addProdForm > div > input {
   width: 100%;
