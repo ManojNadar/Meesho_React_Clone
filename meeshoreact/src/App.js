@@ -10,6 +10,7 @@ import Profile from "./Components/Profile";
 import { useContext } from "react";
 import { MeeshoContext } from "./Components/Context/MyContext";
 import Myproducts from "./Components/Products/MyProducts";
+import UpdateProduct from "./Components/Products/UpdateProduct";
 
 function App() {
   const { state } = useContext(MeeshoContext);
@@ -22,7 +23,16 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/allproducts" element={<AllProducts />} />
         <Route exact path="/myproducts" element={<Myproducts />} />
-        <Route exact path="/singleproduct/:id" element={<SingleProduct />} />
+        <Route
+          exact
+          path="/singleproduct/:productId"
+          element={<SingleProduct />}
+        />
+        <Route
+          exact
+          path="/updateproduct/:productId"
+          element={<UpdateProduct />}
+        />
         <Route exact path="/profile" element={<Profile />} />
         <Route exact path="/cart" element={<Cart />} />
         <Route exact path="/login" element={<Login />} />

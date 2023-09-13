@@ -263,7 +263,7 @@ const Navbar = () => {
                   </NavLink>
                   <NavLink to="/myproducts">
                     <i
-                      class="fa-brands fa-product-hunt"
+                      className="fa-brands fa-product-hunt"
                       style={{ color: "#828283" }}
                     ></i>
                     <p>My Products</p>

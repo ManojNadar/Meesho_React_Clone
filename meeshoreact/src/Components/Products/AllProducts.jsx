@@ -201,7 +201,7 @@ const AllProducts = () => {
                     <div className="ProdDetails">
                       <p>{item.title.slice(0, 20)}..</p>
                       <h4>Rs.{item.price}</h4>
-
+                      {/* 
                       {parseInt(item.deliveryCharge) === 0 ? (
                         <p>Free Delivery</p>
                       ) : (
@@ -210,7 +210,7 @@ const AllProducts = () => {
                       <h5>
                         Discount Rs. -
                         <span className="strikeText">{item.discount} </span>
-                      </h5>
+                      </h5> */}
                     </div>
                   </div>
                 ))}

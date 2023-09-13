@@ -1,83 +1,89 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CartNav from "./CartNav";
 import "../Styles/Cart.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { MeeshoContext } from "./Context/MyContext";
 
 const Cart = () => {
   const [cartItem, setCartItem] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalDelivery, setTotalDelivery] = useState(0);
-  const [totalDiscount, setTotalDiscount] = useState(0);
   const route = useNavigate();
 
-  useEffect(() => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-    if (currentuser) {
-      if (currentuser?.meeshoRole === "Seller") {
-        route("/");
-      }
-    }
-  }, []);
+  const { state } = useContext(MeeshoContext);
 
   useEffect(() => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-    const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
-    if (currentuser) {
-      for (let i = 0; i < regUser.length; i++) {
-        if (regUser[i].meeshoEmail === currentuser.meeshoEmail) {
-          setCartItem(regUser[i].cart);
+    if (state?.currentuser?.role === "Seller") {
+      route("/");
+    }
+  }, [state?.currentuser]);
+
+  useEffect(() => {
+    async function getCartProucts() {
+      try {
+        const token = JSON.parse(localStorage.getItem("meeshoToken"));
+        const response = await axios.post(
+          "http://localhost:8000/get-cart-products",
+          { token }
+        );
+
+        if (response.data.success) {
+          setCartItem(response.data.product);
         }
+      } catch (error) {
+        console.log(error);
       }
     }
+
+    getCartProucts();
   }, []);
 
   useEffect(() => {
-    let sum = 0;
-    let totalDelivery = 0;
-    let totalDiscount = 0;
     if (cartItem?.length) {
+      let sum = 0;
       for (let i = 0; i < cartItem.length; i++) {
         sum += parseInt(cartItem[i].price);
-        totalDelivery += parseInt(cartItem[i].deliveryCharge);
-        totalDiscount += parseInt(cartItem[i].discount);
       }
+      setTotalPrice(sum);
     }
-    setTotalPrice(sum);
-    setTotalDelivery(totalDelivery);
-    setTotalDiscount(totalDiscount);
   }, [cartItem]);
 
-  const removeSingleItem = (id) => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-    const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
+  const removeSingleProduct = async (productId) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("meeshoToken"));
 
-    const removeProd = cartItem.filter((e) => e.id !== id);
+      const response = await axios.post(
+        "http://localhost:8000/delete-cart-product",
+        {
+          productId,
+          token,
+        }
+      );
 
-    for (let i = 0; i < regUser.length; i++) {
-      if (regUser[i].meeshoEmail === currentuser.meeshoEmail) {
-        setCartItem(removeProd);
-        regUser[i].cart = removeProd;
-        localStorage.setItem("meeshoreguser", JSON.stringify(regUser));
-        toast.info("product removed");
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setCartItem(response.data.products);
       }
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 
-  const buyProduct = () => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-    const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
+  const placeOrder = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("meeshoToken"));
 
-    for (let i = 0; i < regUser.length; i++) {
-      if (regUser[i].meeshoEmail === currentuser.meeshoEmail) {
-        regUser[i].cart = [];
-        toast.info("Order Placed Successfully");
-        setTotalPrice(0);
-        setTotalDelivery(0);
-        setTotalDiscount(0);
+      const response = await axios.post("http://localhost:8000/buyproduct", {
+        token,
+      });
+
+      if (response.data.success) {
+        toast.success(response.data.message);
         setCartItem([]);
-        localStorage.setItem("meeshoreguser", JSON.stringify(regUser));
       }
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -111,7 +117,7 @@ const Cart = () => {
                 <div className="cart-items">
                   <div className="top-section-cart">
                     <div className="cart_image">
-                      <img src={item.img} alt="" />
+                      <img src={item.image} alt="" />
                     </div>
                     <div className="cart-details">
                       <h4>{item.title}</h4>
@@ -123,7 +129,7 @@ const Cart = () => {
                       <p className="cartDiscount">Discount ₹{item.discount}</p>
                       <div
                         className="remove"
-                        onClick={() => removeSingleItem(item.id)}
+                        onClick={() => removeSingleProduct(item._id)}
                       >
                         <i className="fa-solid fa-xmark fa-2xs"></i>
                         <p>REMOVE</p>
@@ -149,13 +155,16 @@ const Cart = () => {
                   </div>
                   <div id="prod_price">
                     <p>₹{totalPrice}</p>
-                    <p>-₹{totalDiscount}</p>
-                    <p>+{totalDelivery}</p>
+                    <p>₹ 0</p>
+                    <p>₹ 0</p>
+                    {/* <p>-₹{totalDiscount}</p>
+                    <p>+{totalDelivery}</p> */}
                   </div>
                 </div>
                 <div id="total_price">
                   <p>Order Price</p>
-                  <p>₹{totalPrice + totalDelivery}</p>
+                  {/* <p>₹{totalPrice + totalDelivery}</p> */}
+                  <p>₹{totalPrice}</p>
                 </div>
 
                 <div id="green_container">
@@ -165,7 +174,7 @@ const Cart = () => {
                       alt=""
                     />
                   </div>
-                  <p>Yay! Your total discount is ₹{totalDiscount}</p>
+                  {/* <p>Yay! Your total discount is ₹{totalDiscount}</p> */}
                 </div>
 
                 <div id="light_text">
@@ -173,7 +182,7 @@ const Cart = () => {
                 </div>
 
                 <div id="continue-btn">
-                  <button onClick={buyProduct}>BUY PRODUCT</button>
+                  <button onClick={placeOrder}>BUY PRODUCT</button>
                 </div>
 
                 <div id="cart-banner">

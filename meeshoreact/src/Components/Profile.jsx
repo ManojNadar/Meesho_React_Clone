@@ -4,10 +4,15 @@ import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import { MeeshoContext } from "./Context/MyContext";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Profile = () => {
   const [profModal, setProfModal] = useState(false);
-  const [profDetails, setProfDetails] = useState({});
+  const [profDetails, setProfDetails] = useState({
+    name: "",
+    password: "",
+    confirmPassword: "",
+  });
   const route = useNavigate();
 
   const { state, login } = useContext(MeeshoContext);
@@ -25,49 +30,42 @@ const Profile = () => {
     }
   }, [state]);
 
-  useEffect(() => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-
-    if (currentuser) {
-      setProfDetails(currentuser);
-    }
-  }, [state?.currentuser]);
-
   const handleUpdateProfile = (e) => {
     const { name, value } = e.target;
     setProfDetails({ ...profDetails, [name]: value });
   };
 
-  const handleProfSubmit = (e) => {
+  const handleProfSubmit = async (e) => {
     e.preventDefault();
 
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-    const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
-    const { meeshoPassword, meeshoCpassword } = profDetails;
-    if (currentuser) {
-      if (meeshoPassword === meeshoCpassword) {
-        for (let i = 0; i < regUser.length; i++) {
-          if (regUser[i].meeshoEmail === currentuser.meeshoEmail) {
-            regUser[i].meeshoUser = profDetails.meeshoUser;
-            regUser[i].meeshoPassword = profDetails.meeshoPassword;
-            regUser[i].meeshoCpassword = profDetails.meeshoCpassword;
-            currentuser.meeshoUser = profDetails.meeshoUser;
-            currentuser.meeshoPassword = profDetails.meeshoPassword;
-            currentuser.meeshoCpassword = profDetails.meeshoCpassword;
+    const { name, password, confirmPassword } = profDetails;
 
-            login(currentuser);
-            localStorage.setItem(
-              "currentmeeshouser",
-              JSON.stringify(currentuser)
-            );
-            localStorage.setItem("meeshoreguser", JSON.stringify(regUser));
-            toast.success("Profile Updated success");
+    if (name && password && confirmPassword) {
+      if (password === confirmPassword) {
+        try {
+          const token = JSON.parse(localStorage.getItem("meeshoToken"));
+          const response = await axios.post(
+            "http://localhost:8000/editprofile",
+            {
+              token,
+              profDetails,
+            }
+          );
+
+          if (response.data.success) {
+            const userData = response.data.updateUser;
+            login(userData, token);
+            toast.success(response.data.message);
             setProfModal(false);
           }
+        } catch (error) {
+          console.log(error);
         }
       } else {
-        toast.error("password doesnot match");
+        toast.warn("password doesnot match");
       }
+    } else {
+      toast.warn("all fields are mandatory");
     }
   };
   return (
@@ -82,29 +80,29 @@ const Profile = () => {
             </p>
             <div>
               <input
-                name="meeshoUser"
+                name="name"
                 type="text"
                 placeholder="Update Name"
                 onChange={handleUpdateProfile}
-                value={profDetails.meeshoUser}
+                value={profDetails.name}
               />
             </div>
             <div>
               <input
-                name="meeshoPassword"
+                name="password"
                 type="password"
                 placeholder="Update password"
                 onChange={handleUpdateProfile}
-                value={profDetails.meeshoPassword}
+                value={profDetails.password}
               />
             </div>
             <div>
               <input
-                name="meeshoCpassword"
+                name="confirmPassword"
                 type="password"
                 placeholder="confirm password"
                 onChange={handleUpdateProfile}
-                value={profDetails.meeshoCpassword}
+                value={profDetails.confirmPassword}
               />
             </div>
             <div>

@@ -5,84 +5,48 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { MeeshoContext } from "../Context/MyContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const SingleProduct = () => {
   const [singleProd, setSingleProd] = useState({});
-  const [updateProdModal, setProdModal] = useState(false);
   const { state } = useContext(MeeshoContext);
-  const { id } = useParams();
+  const { productId } = useParams();
   const route = useNavigate();
-  // console.log(singleProd);
+  // console.log(singleprodId);
 
   useEffect(() => {
-    const getMeeshoProduct = JSON.parse(localStorage.getItem("meeshoproducts"));
+    async function singleProduct() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/singleproduct",
+          { productId }
+        );
 
-    if (getMeeshoProduct) {
-      const findProduct = getMeeshoProduct.find((e) => e.id === id);
-      setSingleProd(findProduct);
+        if (response.data.success) {
+          setSingleProd(response.data.singleProductData);
+        }
+      } catch (error) {
+        console.log(error.response.data.message);
+      }
     }
+
+    singleProduct();
   }, []);
 
-  const showUpdateProdModal = () => {
-    setProdModal(true);
-  };
-  const hideUpdateProdModal = () => {
-    setProdModal(false);
-  };
+  const addToCart = async (productId) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("meeshoToken"));
+      const response = await axios.post("http://localhost:8000/add-to-cart", {
+        productId,
+        token,
+      });
 
-  const handleUpdateProdDetails = (e) => {
-    const { name, value } = e.target;
-    setSingleProd({ ...singleProd, [name]: value });
-  };
-
-  const handleUpdateProdDetailsForm = (e) => {
-    e.preventDefault();
-
-    const getMeeshoProduct = JSON.parse(localStorage.getItem("meeshoproducts"));
-    if (getMeeshoProduct) {
-      for (let i = 0; i < getMeeshoProduct.length; i++) {
-        if (getMeeshoProduct[i].id === id) {
-          getMeeshoProduct[i].img = singleProd.img;
-          getMeeshoProduct[i].title = singleProd.title;
-          getMeeshoProduct[i].price = singleProd.price;
-          getMeeshoProduct[i].discount = singleProd.discount;
-          getMeeshoProduct[i].deliveryCharge = singleProd.deliveryCharge;
-          getMeeshoProduct[i].category = singleProd.category;
-
-          localStorage.setItem(
-            "meeshoproducts",
-            JSON.stringify(getMeeshoProduct)
-          );
-          setProdModal(false);
-          toast.success("product Updated");
-        }
+      if (response.data.success) {
+        toast.success(response.data.message);
+        route("/cart");
       }
-    }
-  };
-
-  const addToCart = (id) => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmeeshouser"));
-    const regUser = JSON.parse(localStorage.getItem("meeshoreguser"));
-
-    if (currentuser) {
-      for (let i = 0; i < regUser.length; i++) {
-        if (regUser[i].meeshoEmail === currentuser.meeshoEmail) {
-          const filterProd = regUser[i].cart.find((e) => e.id === id);
-          if (regUser[i].cart.length && filterProd) {
-            toast.info("already added");
-            setTimeout(() => {
-              route("/cart");
-            }, 900);
-          } else {
-            regUser[i].cart.push(singleProd);
-            localStorage.setItem("meeshoreguser", JSON.stringify(regUser));
-            toast.success("product added");
-            setTimeout(() => {
-              route("/allproducts");
-            }, 900);
-          }
-        }
-      }
+    } catch (error) {
+      toast.warn(error.response.data.message);
     }
   };
 
@@ -103,109 +67,28 @@ const SingleProduct = () => {
         theme="light"
       />
 
-      {updateProdModal ? (
-        <div className="updateProfModal">
-          <div className="modalProdUpdateContainer">
-            <p onClick={hideUpdateProdModal} className="closeProdModal">
-              X
-            </p>
-            <h2>Update Profile</h2>
-            <form
-              className="updateProdForm"
-              onSubmit={handleUpdateProdDetailsForm}
-            >
-              <div>
-                <input
-                  type="text"
-                  placeholder="Update Image URL"
-                  onChange={handleUpdateProdDetails}
-                  value={singleProd.img}
-                  name="img"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Update Product Title"
-                  onChange={handleUpdateProdDetails}
-                  value={singleProd.title}
-                  name="title"
-                />
-              </div>
-              <div>
-                <input
-                  type="number"
-                  placeholder="Update Product Price"
-                  onChange={handleUpdateProdDetails}
-                  value={singleProd.price}
-                  name="price"
-                />
-              </div>
-              <div>
-                <input
-                  type="number"
-                  placeholder="Update Product discount"
-                  onChange={handleUpdateProdDetails}
-                  value={singleProd.discount}
-                  name="discount"
-                />
-              </div>
-              <div>
-                <input
-                  type="number"
-                  placeholder="Update Product Delivery Charge"
-                  onChange={handleUpdateProdDetails}
-                  value={singleProd.deliveryCharge}
-                  name="deliveryCharge"
-                />
-              </div>
-              <div>
-                <select
-                  name="category"
-                  value={singleProd.category}
-                  onChange={handleUpdateProdDetails}
-                >
-                  <option value="">SELECT CATEGORY</option>
-                  <option value="Mens">Mens</option>
-                  <option value="Womens">Womens</option>
-                  <option value="Kids">Kids</option>
-                  <option value="Home">Home & Accessories</option>
-                  <option value="Jwellery">Jwellery</option>
-                  <option value="Footwear">Footwear</option>
-                  <option value="Electronics">Electronics</option>
-                </select>
-              </div>
-
-              <div>
-                <input type="submit" value="UPDATE PRODUCT" />
-              </div>
-            </form>
-          </div>
-        </div>
-      ) : null}
-
       <main>
         <div id="main-inner-body">
           <div id="left-section">
             <div id="left-small-outer-container">
               <div className="left-small-inner-container">
                 <div className="left-small">
-                  <img src={singleProd.img} alt="" />
+                  <img src={singleProd.image} alt="" />
                 </div>
               </div>
               <div className="left-small-inner-container">
                 <div className="left-small">
-                  <img src={singleProd.img} alt="" />
+                  <img src={singleProd.image} alt="" />
                 </div>
               </div>
               <div className="left-small-inner-container">
                 <div className="left-small">
-                  <img src={singleProd.img} alt="" />
+                  <img src={singleProd.image} alt="" />
                 </div>
               </div>
               <div className="left-small-inner-container">
                 <div className="left-small">
-                  <img src={singleProd.img} alt="" />
+                  <img src={singleProd.image} alt="" />
                 </div>
               </div>
             </div>
@@ -214,30 +97,20 @@ const SingleProduct = () => {
               <div>
                 <div id="middle-main-image">
                   <div id="middle-image">
-                    <img src={singleProd.img} alt="" />
+                    <img src={singleProd.image} alt="" />
                   </div>
                 </div>
               </div>
 
-              {state?.currentuser &&
-              state?.currentuser?.meeshoRole === "Buyer" ? (
+              {state?.currentuser && state?.currentuser?.role === "Buyer" ? (
                 <div id="main-btn">
                   <div id="cart-btn">
-                    <button onClick={() => addToCart(singleProd.id)}>
+                    <button onClick={() => addToCart(singleProd._id)}>
                       Add to Cart
                     </button>
                   </div>
                   <div id="buy-btn">
                     <button>Buy Now</button>
-                  </div>
-                </div>
-              ) : null}
-              {state?.currentuser?.meeshoRole === "Seller" ? (
-                <div id="main-btn">
-                  <div id="buy-btn">
-                    <button onClick={showUpdateProdModal}>
-                      UPDATE PRODUCT
-                    </button>
                   </div>
                 </div>
               ) : null}
@@ -263,11 +136,11 @@ const SingleProduct = () => {
                 <span>105 Ratings, 32 Reviews </span>
               </div>
 
-              {parseInt(singleProd.deliveryCharge) === 0 ? (
+              {/* {parseInt(singleProd.deliveryCharge) === 0 ? (
                 <p>Free Delivery</p>
               ) : (
                 <p>Delivery Charge Rs.{singleProd.deliveryCharge}</p>
-              )}
+              )} */}
             </div>
             <div id="right-middle">
               <h4>SELECT SIZE</h4>

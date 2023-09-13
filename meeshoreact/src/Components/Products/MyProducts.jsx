@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
+import "../../Styles/ProductsCss/MyProducts.css";
 
 const Myproducts = () => {
   const [ownProducts, setOwnProducts] = useState([]);
@@ -30,7 +31,7 @@ const Myproducts = () => {
 
   const deleteProduct = async (productId) => {
     try {
-      const token = JSON.parse(localStorage.getItem("myntraToken"));
+      const token = JSON.parse(localStorage.getItem("meeshoToken"));
 
       const response = await axios.post(
         "http://localhost:8000/delete-product",
