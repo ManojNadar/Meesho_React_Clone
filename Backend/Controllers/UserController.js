@@ -112,7 +112,7 @@ export const Login = async (req, res) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: "Error from Catch Block",
+      message: error.message,
     });
   }
 };

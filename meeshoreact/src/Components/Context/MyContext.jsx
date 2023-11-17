@@ -45,7 +45,6 @@ const MyContext = ({ children }) => {
     async function getCurremtUser() {
       try {
         const token = JSON.parse(localStorage.getItem("meeshoToken"));
-
         const response = await axios.post("http://localhost:8000/currentuser", {
           token,
         });
